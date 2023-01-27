@@ -14,6 +14,9 @@ const generateTasks = (i) =>
 
 let workers = [
   { url: "http://worker:8080", id: "" },
+  { url: "http://worker1:8080", id: "" },
+  { url: "http://worker2:8080", id: "" },
+  { url: "http://worke3:8080", id: "" },
 ];
 
 const app = express()
