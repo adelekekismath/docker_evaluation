@@ -69,8 +69,10 @@ const sendTask = async (worker, task) => {
       return res
     })
     .catch((err) => {
-      console.error(task, ' failed', err.message)
-      tasks = [...tasks, task]
+      workers = [...workers, worker];
+      tasks = [...tasks, task];
+      sendTask(workers[0], task);
+      
     })
 }
 
