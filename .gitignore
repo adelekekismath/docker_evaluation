@@ -13,3 +13,6 @@ yarn-error.log
 # Test stuff
 coverage/
 .nyc*
+planner/package-lock.json
+worker/package-lock.json
+worker/package.json

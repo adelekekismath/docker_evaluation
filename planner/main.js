@@ -8,12 +8,13 @@ const nbTasks = parseInt(process.env.TASKS) || 20
 const randInt = (min, max) => Math.floor(Math.random() * (max - min)) + min
 const taskType = () => (randInt(0, 2) ? 'mult' : 'add')
 const args = () => ({ a: randInt(0, 40), b: randInt(0, 40) })
+const worker = process.env.WORKER;
 
 const generateTasks = (i) =>
   new Array(i).fill(1).map((_) => ({ type: taskType(), args: args() }))
 
 let workers = [
-  // { url: 'http://localhost:8080', id: '' }
+  { url: worker, id: '' }
 ]
 
 const app = express()
