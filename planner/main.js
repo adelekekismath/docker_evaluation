@@ -13,10 +13,10 @@ const generateTasks = (i) =>
   new Array(i).fill(1).map((_) => ({ type: taskType(), args: args() }))
 
 let workers = [
-  { url: "http://worker:8080", id: "0" },
-  { url: "http://worker1:8080", id: "1" },
-  { url: "http://worker2:8080", id: "2" },
-  { url: "http://worker3:8080", id: "3" },
+  { url: "http://worker:8080", id: "0", type: "add" },
+  { url: "http://worker1:8080", id: "1", type: "mult" },
+  { url: "http://worker2:8080", id: "2", type: "add" },
+  { url: "http://worker3:8080", id: "3", type: "mult" },
 ];
 
 const app = express()
@@ -48,32 +48,35 @@ const sendTask = async (worker, task) => {
   console.log(`=> ${worker.url}/${task.type}`, task)
   workers = workers.filter((w) => w.id !== worker.id)
   tasks = tasks.filter((t) => t !== task)
-  const request = fetch(`${worker.url}/${task.type}`, {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(task.args),
-  })
-    .then((res) => {
-      workers = [...workers, worker]
-      return res.json()
+  if (worker.type == tasks || worker.type== "") {
+    const request = fetch(`${worker.url}/${task.type}`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(task.args),
     })
-    .then((res) => {
-      taskToDo -= 1
-      console.log('---')
-      console.log(nbTasks - taskToDo, '/', nbTasks, ':')
-      console.log(task, 'has res', res)
-      console.log('---')
-      return res
-    })
-    .catch((err) => {
-      workers = [...workers, worker];
-      tasks = [...tasks, task];
-      sendTask(workers[0], task);
-      
-    })
+      .then((res) => {
+        workers = [...workers, worker];
+        return res.json();
+      })
+      .then((res) => {
+        taskToDo -= 1;
+        console.log("---");
+        console.log(nbTasks - taskToDo, "/", nbTasks, ":");
+        console.log(task, "has res", res);
+        console.log("---");
+        return res;
+      });
+  }
+  else {
+    tasks = [...tasks, task];
+    workers = [...workers, worker];
+    sendTask(worker[0],task);
+  }
+  
+   
 }
 
 const main = async () => {
